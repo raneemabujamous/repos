@@ -1,14 +1,23 @@
 "use strict";
 let sectionEl = document.getElementById("cardSection");
-let formEl = document.getElementById("formID");
+let formEl = document.getElementById("formId");
 let allDrinks = [];
 let tableEl = document.getElementById("tableID");
-let sub = document.getElementById("submit");
-sub.addEventListener("submit", handleSubmit);
 
+function Drink(name, ingredients, image, isCold, isHot, price) {
+  this.name = name;
+  this.ingredients = ingredients;
+  this.image = image;
+  this.isCold = isCold;
+  this.isHot = isHot;
+  this.price = price;
+
+  allDrinks.push(this);
+}
+formEl.addEventListener("submit", handleSubmit);
 function handleSubmit(event) {
   // the default behaviour of submitting the form is to refresh the page
-
+  console.log("eventeventevent");
   event.preventDefault();
   // for text input
   let drinkName = event.target.drinkName.value;
@@ -23,20 +32,10 @@ function handleSubmit(event) {
   // create a new drink
 
   let newDrink = new Drink(drinkName, ingredientsArr, image, cold, hot, price);
+  allDrinks.push(newDrink);
+  saveData();
   newDrink.render();
-
-  saveData(allDrinks);
-}
-
-function Drink(name, ingredients, image, isCold, isHot, price) {
-  this.name = name;
-  this.ingredients = ingredients;
-  this.image = image;
-  this.isCold = isCold;
-  this.isHot = isHot;
-  this.price = price;
-
-  allDrinks.push(this);
+  newDrink.renderTable();
 }
 Drink.prototype.render = function () {
   // createing h3 for the name of the drink
@@ -115,13 +114,13 @@ function renderAll() {
 renderAll();
 
 // local storage:
-function saveData(data) {
-  let stringfiyData = JSON.stringify(data);
+function saveData() {
+  let stringfiyData = JSON.stringify(allDrinks);
   localStorage.setItem("drinks", stringfiyData);
 }
 
 function getData() {
-  let retrievedData = localStorage.getItem("drink");
+  let retrievedData = localStorage.getItem("drinks");
 
   let arrayData = JSON.parse(retrievedData);
   // each object doesn't has access to render method
